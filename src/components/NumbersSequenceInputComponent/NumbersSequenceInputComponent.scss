@@ -1,0 +1,113 @@
+@use 'mixins';
+
+$font-size: 36px !default;
+$font-size-min: 26px !default;
+$font-size-max: 80px !default;
+$color-mode-add-border: green !default;
+$color-mode-add-focus-border: green !default;
+$color-mode-delete-border: green !default; //#c1348e
+$color-add-input-button-text: green !default;
+
+
+
+.numbers-sequence-input-component {
+
+  font-size: clamp(#{$font-size-min}, #{$font-size}, #{$font-size-max}); // interpolation is required here, IDK why, however it works this way
+
+
+  .numbers-sequence-input input,
+  .numbers-sequence-input-add {
+    text-align: center;
+    width: 3.2em;
+
+    padding: 0.3em;
+    border-radius: 0.2em;
+    border: 0.06em solid;
+
+  }
+
+  .numbers-sequence-input {
+    display: inline; // глючит почему-то, причем, вроде, не из-за 'inline'
+    @include mixins.input-number-remove-arrows;
+
+    input {
+      margin-right: 0.3em;
+      margin-bottom: 0.3em;
+      color: $color-mode-add-border;
+      border-color: $color-mode-add-border;
+
+      float:left; // deletes the unnecessary whitespace
+    }
+  }
+
+  .numbers-sequence-input-add {
+    background-color: $color-mode-add-focus-border;
+    border-color: $color-mode-add-focus-border;
+    cursor: pointer;
+    transition: .6s;
+    color: $color-add-input-button-text;
+
+    //width: auto;
+    //min-width: 3.2em;
+
+
+    &:hover {
+      box-shadow: 0.2em 0.2em lighten($color-mode-add-focus-border, 30%);
+      transition: .6s;
+    }
+    &:active {
+      transform: scale(0.9);
+    }
+  }
+
+  &.mode-add {
+    // all styles are default (defined above)
+    .numbers-sequence-input {
+      input {
+        &:invalid {
+          border-color: $color-mode-delete-border;
+        }
+      }
+    }
+  }
+
+  &.mode-delete {
+
+    .numbers-sequence-input {
+      input {
+        border-color: $color-mode-delete-border;
+        &:focus {
+          animation: 0.1s linear 0s shake;
+          animation-iteration-count: infinite;
+        }
+      }
+    }
+
+    .numbers-sequence-input-add {
+      background-color: $color-mode-delete-border;
+      border-color: $color-mode-delete-border;
+    }
+  }
+
+
+
+}
+
+@keyframes shake {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(0.04em, 0);
+  }
+  50% {
+    transform: translate(0, 0);
+  }
+  75% {
+    transform: translate(-0.04em, 0);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+
+}
