@@ -22,10 +22,15 @@ export class NumSeqInputComponent {
         }
     };
 
-    public static readonly DEFAULT_NUM_SEQ_INPUT_BLOCK_DOM_CLASS: string = '.numbers-sequence-input-add';
-    public static readonly DEFAULT_ADD_BUTTON_DOM_CLASS: string = '.numbers-sequence-input';
+    public static readonly DEFAULT_NUMBERS_SEQUENCE_INPUT_COMPONENT_SELECTOR: string = '.numbers-sequence-input-component';
+    public static readonly DEFAULT_NUM_SEQ_INPUT_BLOCK_DOM_SELECTOR: string = '.numbers-sequence-input-add';
+    public static readonly DEFAULT_ADD_BUTTON_DOM_SELECTOR: string = '.numbers-sequence-input';
+    public static readonly DEFAULT_SWITCH_DOM_SELECTOR: string = '.switch';
+
+
     public static readonly DEFAULT_INPUT: Readonly<HTMLInputElement> = NumSeqInputComponent.initializer.defaultInput(); //NumbersSequenceInputComponent.initializeInputDefault(); // initialization is
     public static readonly DEFAULT_MODE = Mode.ADD;
+    public static readonly DEFAULT_INIT_INPUTS_NUMBER: number = 4;
 
     public static readonly KEYS_TO_ADD_INPUT: ReadonlyArray<string> = new Array<Key>(
         Key.Enter,
@@ -36,14 +41,26 @@ export class NumSeqInputComponent {
         Key.Space,
     );
 
-    public readonly numsSeqInputBlockDOMClass: string = NumSeqInputComponent.DEFAULT_NUM_SEQ_INPUT_BLOCK_DOM_CLASS;
-    public readonly addButtonDOMClass: string = NumSeqInputComponent.DEFAULT_ADD_BUTTON_DOM_CLASS;
-    private readonly input: HTMLInputElement = NumSeqInputComponent.DEFAULT_INPUT;
-    public readonly mode: Mode = NumSeqInputComponent.DEFAULT_MODE;
+    public static readonly KEYS_TO_CHANGE_INPUT: ReadonlyArray<string> = new Array<Key>(
+        Key.Enter,
+        // Tab is by default
+    );
+
+    private readonly numbersSequenceInputComponentSelector: string = NumSeqInputComponent.DEFAULT_NUMBERS_SEQUENCE_INPUT_COMPONENT_SELECTOR;
+    private readonly numsSeqInputBlockDOMSelector: string = NumSeqInputComponent.DEFAULT_NUM_SEQ_INPUT_BLOCK_DOM_SELECTOR;
+    private readonly addButtonDOMSelector: string = NumSeqInputComponent.DEFAULT_ADD_BUTTON_DOM_SELECTOR;
+    private readonly switchDOMSelector: string = NumSeqInputComponent.DEFAULT_SWITCH_DOM_SELECTOR;
+
+    private input: HTMLInputElement = NumSeqInputComponent.DEFAULT_INPUT;
+    private mode: Mode = NumSeqInputComponent.DEFAULT_MODE;
+    private readonly initInputsNumber = NumSeqInputComponent.DEFAULT_INIT_INPUTS_NUMBER;
 
 
+    private readonly numbersSequenceInputComponent: HTMLDivElement;
     private readonly addButton: HTMLButtonElement;
     private readonly numSeqInputBlock: HTMLDivElement;
+    private readonly switch: HTMLElement;
+
 
     private inputsList: Array<HTMLInputElement> = new Array<HTMLInputElement>();
 
@@ -57,48 +74,70 @@ export class NumSeqInputComponent {
 
 
 
-    constructor( input: HTMLInputElement, numsSeqInputBlockDOMClass: string, addButtonDOMClass: string)
-    constructor( numsSeqInputBlockDOMClass: string, addButtonDOMClass: string);
-    constructor( input: HTMLInputElement );
-    constructor();
-    constructor( ...args: any ) {
+    constructor(args: {
+        input?: HTMLInputElement,
+        numsSeqInputBlockDOMClass?: string,
+        addButtonDOMClass?: string,
+        initInputsNumber?: number }) {
+
+        const { input, numsSeqInputBlockDOMClass, addButtonDOMClass, initInputsNumber } = args;
 
         let isInputSpecified = false;
 
-        if ( args.length == 3 ) {
-            this.input = args[0];
+        if ( input ) {
+            this.input = input;
             isInputSpecified = true;
-            this.numsSeqInputBlockDOMClass = args[1];
-            this.addButtonDOMClass = args[2];
-
-        } else if ( args.length == 2 ) {
-            this.numsSeqInputBlockDOMClass = args[0];
-            this.addButtonDOMClass = args[1];
-
-        } else if ( args.length == 1 ) {
-            this.input = args[0];
+        }
+        if ( numsSeqInputBlockDOMClass && numsSeqInputBlockDOMClass.replaceAll(' ', '') === ' ' ) {
+            this.numsSeqInputBlockDOMSelector = numsSeqInputBlockDOMClass;
+        }
+        if ( addButtonDOMClass && addButtonDOMClass.replaceAll(' ', '') === ' ' ) {
+            this.addButtonDOMSelector = addButtonDOMClass;
+        }
+        if ( initInputsNumber !== undefined ) {
+            if ( initInputsNumber < 0 ) {
+                throw new Error('Initial number of inputs can\'t be below "0"');
+            }
+            this.initInputsNumber = initInputsNumber;
         }
 
 
+        this.numbersSequenceInputComponent = document.querySelector( this.numbersSequenceInputComponentSelector ) as HTMLDivElement;
+        this.addButton = document.querySelector( this.numsSeqInputBlockDOMSelector ) as HTMLButtonElement;
+        this.numSeqInputBlock = document.querySelector( this.addButtonDOMSelector ) as HTMLDivElement;
+        this.switch = document.querySelector( this.switchDOMSelector ) as HTMLElement;
 
-
-        this.addButton = document.querySelector( this.numsSeqInputBlockDOMClass ) as HTMLButtonElement;
-        this.numSeqInputBlock = document.querySelector( this.addButtonDOMClass ) as HTMLDivElement;
-
-        if ( this.addButton == null || this.numSeqInputBlock == null ) {
+        if (   this.numbersSequenceInputComponent === null
+            || this.addButton === null
+            || this.numSeqInputBlock === null
+            || this.switch === null
+        ) {
             throw Error( 'HTML document doesn\'t contain elements with the specified' +
                 ' class names.' );
         }
 
-        const existingInDOMInput = this.findExistingInputInDOM();
+        const existingInDOMInputs = this.findExistingInDOMInputs();
 
-        if ( ! isInputSpecified && existingInDOMInput ) {
+        if ( isInputSpecified && existingInDOMInputs.length != 0 ) {
+            throw new Error('Constructor parameter "input" is specified and there are' +
+                ' existing "input" elements in DOM at the same time. Leave only one of' +
+                ' these options.');
+        }
 
-            this.input = existingInDOMInput.cloneNode() as HTMLInputElement;
+        if ( existingInDOMInputs.length != 0 ) {
+            this.input = existingInDOMInputs[0].cloneNode() as HTMLInputElement;
             this.input.value = '';
         }
 
-        this.inputsList.push( this.input );
+        for ( const input of existingInDOMInputs ) {
+            this.inputsList.push( input );
+        }
+
+        if ( this.initInputsNumber > existingInDOMInputs.length ) {
+            this.addSeveralInputs(this.initInputsNumber - existingInDOMInputs.length, true);
+        }
+
+        console.warn('inpList length = ', this.inputsList.length);
 
         this.init(); // initialize them all ...
 
@@ -117,23 +156,32 @@ export class NumSeqInputComponent {
                 // necessary ?
                 return;
 
+            const input: HTMLInputElement = event.target as HTMLInputElement;
+
             const pressedKey: string = event.code;
 
             switch ( this.mode ) {
                 case ( Mode.ADD ): {
-                    if ( NumSeqInputComponent.KEYS_TO_ADD_INPUT.includes( pressedKey )
-                        && event.target === this.getLastInput( this.numSeqInputBlock.children )
-                        && this.areAllInputsFilledCorrectly()
-                    ) {
-                        this.addInput(true);
+                    if ( NumSeqInputComponent.KEYS_TO_ADD_INPUT.includes( pressedKey ) ) {
+                        if ( input === this.getLastInput() && this.areAllInputsFilledCorrectly()) {
+                                this.addInput(true);
+                        } else {
+                            const nextInput = this.getNextInput( input );
+                            if ( nextInput ) {
+                                nextInput.focus();
+                            }
+                        }
                     }
                     break;
                 }
                 case ( Mode.DELETE ): {
 
                     if ( NumSeqInputComponent.KEYS_TO_DELETE_INPUT.includes( pressedKey ) ) {
-                        console.warn('trying to delete');
+                        const prevInput = this.getPrevInput( input );
                         this.deleteInput( event.target );
+                        if ( prevInput ) {
+                            prevInput.focus();
+                        }
                     }
                     break;
                 }
@@ -145,32 +193,50 @@ export class NumSeqInputComponent {
 
 
         this.addButton.addEventListener( 'click', () => {
-            if ( this.areAllInputsFilledCorrectly() ) {
-                this.addInput( true );
+            switch ( this.mode ) {
+                case (Mode.ADD): {
+                    if ( this.areAllInputsFilledCorrectly() ) {
+                        this.addInput( true );
+                    }
+                }
             }
+        });
+
+
+        this.switch.addEventListener( 'change', () => {
+            console.warn('mr Switch is clicked');
+
+            switch ( this.mode ) {
+                case ( Mode.ADD ): {
+                    this.setMode( Mode.DELETE );
+                    break;
+                }
+                case ( Mode.DELETE ): {
+                    this.setMode( Mode.ADD );
+                    break;
+                }
+                default: {
+                    throw Error('Undefined "mode" is used');
+                }
+            }
+
+            console.warn('new Mode = ', this.mode);
         });
     }
 
-    private findExistingInputInDOM(): HTMLInputElement | undefined {
+    private findExistingInDOMInputs(): Array<HTMLInputElement> {
+        const existingInputs = new Array<HTMLInputElement>();
+
         for ( const child of this.numSeqInputBlock.children ) {
             if ( child instanceof HTMLInputElement ) {
-                return child as HTMLInputElement;
+                existingInputs.push( child );
             }
         }
-        return undefined;
+        return existingInputs;
     }
 
 
     private areAllInputsFilledCorrectly(): boolean {
-        for ( const child of this.numSeqInputBlock.children ) {
-            if ( child instanceof HTMLInputElement ) {
-                const childAsInput = child as HTMLInputElement;
-                if ( ! (childAsInput).checkValidity() ) {
-                    childAsInput.reportValidity();
-                    return false;
-                }
-            }
-        }
 
         for ( const input of this.inputsList ) {
             if ( ! input.checkValidity() ) {
@@ -188,11 +254,24 @@ export class NumSeqInputComponent {
     public addInput(setFocus?: boolean): void {
         const newInput = this.input.cloneNode() as HTMLInputElement;
         this.numSeqInputBlock.append( newInput );
+        this.inputsList.push( newInput );
 
         if ( setFocus ) {
             newInput.focus();
         }
 
+    }
+
+    public addSeveralInputs( numOfInputs: number, setFocus?: boolean ) {
+        if ( numOfInputs < 0 ) {
+            throw new Error('Number of inputs isn\'t allowed to be below "0"');
+        }
+        for ( let i = 0; i < numOfInputs - 1; i++ ) { // -1 for setting focus for the
+            // last input
+            this.addInput( false );
+        }
+
+        this.addInput( setFocus );
     }
 
 
@@ -202,7 +281,14 @@ export class NumSeqInputComponent {
      * @private
      */
     private deleteInput(input: HTMLInputElement): void {
+        const index = this.inputsList.indexOf(input);
+
+        if ( index === -1 ) {
+            throw new Error('The specified "input" not found.');
+        }
+
         input.remove();
+        this.inputsList.splice( this.inputsList.indexOf(input), 1);
     }
 
 
@@ -212,42 +298,53 @@ export class NumSeqInputComponent {
      * @param {HTMLCollection} collection
      * @returns {HTMLInputElement | undefined}
      */
-    private getLastInput(collection: HTMLCollection): HTMLInputElement | undefined {
-        const inputType: string = this.input.type;
-        for ( let i = collection.length - 1; i > 0; i-- ) {
-            if ( collection[i] instanceof HTMLInputElement
-                 && (collection[i] as HTMLInputElement).type == inputType ) {
-                console.log('Last input found.');
-                return collection[i] as HTMLInputElement;
-            }
-        }
-
-        return undefined;
+    private getLastInput(): HTMLInputElement | undefined {
+        return this.inputsList.length != 0 ? this.inputsList[this.inputsList.length - 1] : undefined;
     }
 
 
-    // /**
-    //  * @deprecated
-    //  * Deletes all inputs from "numSeqInputBlock".
-    //  * "non-input" elements aren't affected.
-    //  */
-    // public deleteAllInputs(): void {
-    //
-    //     /**
-    //      * Is implemented this way not to delete 'non-input' elements (they may
-    //      * be added to this component).
-    //      */
-    //     const inputsToDelete: Array<HTMLInputElement> = new Array<HTMLInputElement>();
-    //     for ( const input of this.numSeqInputBlock.children ) {
-    //         if ( input instanceof HTMLInputElement ) {
-    //             inputsToDelete.push( input );
-    //         }
-    //     }
-    //
-    //     inputsToDelete.forEach( (input) => {
-    //         input.remove();
-    //     } );
-    // }
+    private getNextInput( input: HTMLInputElement ) {
+        const index = this.inputsList.indexOf( input );
+        if ( index == -1 || index == this.inputsList.length - 1 ) {
+            return undefined;
+        }
+        return this.inputsList[index + 1];
+    }
+
+
+    private getPrevInput( input: HTMLInputElement ) {
+        const index = this.inputsList.indexOf( input );
+        if ( index == -1 || index == 0 ) {
+            return undefined;
+        }
+        return this.inputsList[index - 1];
+    }
+
+
+
+        /**
+     * @deprecated
+     * Deletes all inputs from "numSeqInputBlock".
+     * "non-input" elements aren't affected.
+     */
+    public deleteAllInputs(): void {
+
+        for ( const input of this.inputsList ) {
+            input.remove();
+        }
+
+        this.inputsList = new Array<HTMLInputElement>();
+    }
+
+    private setMode( mode: Mode ) {
+        this.setModeDOM( mode );
+        this.mode = mode;
+    }
+
+    private setModeDOM( mode: Mode, prevMode?: Mode ) {
+        this.numbersSequenceInputComponent.classList.remove( prevMode ? prevMode : this.mode );
+        this.numbersSequenceInputComponent.classList.add( mode );
+    }
 
 
     // /**
@@ -277,12 +374,12 @@ export class NumSeqInputComponent {
 
 
     public getAddButtonDOMClass(): string {
-        return this.addButtonDOMClass;
+        return this.addButtonDOMSelector;
     }
 
 
     public getNumSeqInputBlockDOMClass(): string {
-        return this.numsSeqInputBlockDOMClass;
+        return this.numsSeqInputBlockDOMSelector;
     }
 
 
@@ -291,11 +388,10 @@ export class NumSeqInputComponent {
     public getValues(): NumSeqInputComponentResult { // todo
         const values: Array<any> = new Array<any>();
 
-        for ( const child of this.numSeqInputBlock.children ) {
-            if ( child instanceof HTMLInputElement ) {
-                values.push( (child as HTMLInputElement).value );
-            }
+        for ( const input of this.inputsList ) {
+            values.push( input.value );
         }
+
         return {
             areAllInputsFilledCorrectly: this.areAllInputsFilledCorrectly(),
             values: values

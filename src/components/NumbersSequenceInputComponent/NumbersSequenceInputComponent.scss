@@ -52,7 +52,10 @@ $color-add-input-button-text: green !default;
 
 
     &:hover {
-      box-shadow: 0.2em 0.2em lighten($color-mode-add-focus-border, 30%);
+      //box-shadow: 0.2em 0.2em lighten($color-mode-add-focus-border, 30%);
+      border-color: $color-mode-add-focus-border;
+      background-color: $color-add-input-button-text;
+      color: $color-mode-add-focus-border;
       transition: .6s;
     }
     &:active {
@@ -86,6 +89,12 @@ $color-add-input-button-text: green !default;
     .numbers-sequence-input-add {
       background-color: $color-mode-delete-border;
       border-color: $color-mode-delete-border;
+      &:hover {
+        border-color: $color-mode-delete-border;
+        background-color: $color-add-input-button-text;
+        color: $color-mode-delete-border;
+
+      }
     }
   }
 

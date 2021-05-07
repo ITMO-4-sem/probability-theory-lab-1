@@ -9,7 +9,9 @@
   $color-add-input-button-text: vrs.$color-olive-white,
 );
 
-@use 'src/components/ToggleSwitchComponent/ToggleSwitchComponent';
+@use 'src/components/ToggleSwitchComponent/ToggleSwitchComponent' with (
+  $color: vrs.$color-olive-pink
+);
 
 @import '~normalize.css';
 
