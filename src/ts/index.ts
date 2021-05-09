@@ -1,9 +1,11 @@
 import '@scss/index.scss'; // is necessary for connecting styles to index.html
 
-import { NumSeqInputComponent } from '@/components/NumbersSequenceInputComponent/NumSeqInputComponent';
+import { InputsSequenceComponent } from '@/components/InputsSequenceComponent/InputsSequenceComponent';
 
-const numSeqInputComponent = new NumSeqInputComponent({initInputsNumber: 8});
+const inputsSequenceComponent = new InputsSequenceComponent({initInputsNumber: 1});
+
+
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-window.numSeqInputComponent = numSeqInputComponent;
+window.inputsSequenceComponent = inputsSequenceComponent;

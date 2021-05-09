@@ -1,4 +1,4 @@
-@use 'mixins';
+@use 'scss/mixins';
 
 $font-size: 36px !default;
 $font-size-min: 26px !default;
@@ -10,23 +10,21 @@ $color-add-input-button-text: green !default;
 
 
 
-.numbers-sequence-input-component {
+.inputs-sequence-container {
 
   font-size: clamp(#{$font-size-min}, #{$font-size}, #{$font-size-max}); // interpolation is required here, IDK why, however it works this way
 
 
-  .numbers-sequence-input input,
-  .numbers-sequence-input-add {
+  &__inputs input, &__add-button {
     text-align: center;
     width: 3.2em;
 
     padding: 0.3em;
     border-radius: 0.2em;
     border: 0.06em solid;
-
   }
 
-  .numbers-sequence-input {
+  &__inputs {
     display: inline; // глючит почему-то, причем, вроде, не из-за 'inline'
     @include mixins.input-number-remove-arrows;
 
@@ -40,16 +38,12 @@ $color-add-input-button-text: green !default;
     }
   }
 
-  .numbers-sequence-input-add {
+  &__add-button {
     background-color: $color-mode-add-focus-border;
     border-color: $color-mode-add-focus-border;
     cursor: pointer;
     transition: .6s;
     color: $color-add-input-button-text;
-
-    //width: auto;
-    //min-width: 3.2em;
-
 
     &:hover {
       //box-shadow: 0.2em 0.2em lighten($color-mode-add-focus-border, 30%);
@@ -63,9 +57,9 @@ $color-add-input-button-text: green !default;
     }
   }
 
-  &.mode-add {
+  &--mode-add {
     // all styles are default (defined above)
-    .numbers-sequence-input {
+    .inputs-sequence-container__inputs {
       input {
         &:invalid {
           border-color: $color-mode-delete-border;
@@ -74,9 +68,9 @@ $color-add-input-button-text: green !default;
     }
   }
 
-  &.mode-delete {
+  &--mode-delete {
 
-    .numbers-sequence-input {
+    .inputs-sequence-container__inputs {
       input {
         border-color: $color-mode-delete-border;
         &:focus {
@@ -86,7 +80,7 @@ $color-add-input-button-text: green !default;
       }
     }
 
-    .numbers-sequence-input-add {
+    .inputs-sequence-container__add-button {
       background-color: $color-mode-delete-border;
       border-color: $color-mode-delete-border;
       &:hover {

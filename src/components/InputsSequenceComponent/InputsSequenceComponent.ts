@@ -1,12 +1,12 @@
-import { Mode } from './Mode';
-import { Key } from '@/components/NumbersSequenceInputComponent/Key';
-import { NumSeqInputComponentResult } from '@/components/NumbersSequenceInputComponent/NumSeqInputComponentResult';
+import { Mode } from './ts/Mode';
+import { Key } from '@/components/InputsSequenceComponent/ts/Key';
+import { InputsSequenceComponentResult } from '@/components/InputsSequenceComponent/ts/InputsSequenceComponentResult';
 
 
 /**
  * NumbersSequenceInputComponent. A component containing
  */
-export class NumSeqInputComponent {
+export class InputsSequenceComponent {
 
     // initializers block
     private static readonly initializer = {
@@ -16,19 +16,16 @@ export class NumSeqInputComponent {
             input.maxLength = 4;
             input.step = 'any';
             input.type = 'number';
-            input.classList.add('number-input'); // is it necessary?
 
             return input;
         }
     };
 
-    public static readonly DEFAULT_NUMBERS_SEQUENCE_INPUT_COMPONENT_SELECTOR: string = '.numbers-sequence-input-component';
-    public static readonly DEFAULT_NUM_SEQ_INPUT_BLOCK_DOM_SELECTOR: string = '.numbers-sequence-input-add';
-    public static readonly DEFAULT_ADD_BUTTON_DOM_SELECTOR: string = '.numbers-sequence-input';
-    public static readonly DEFAULT_SWITCH_DOM_SELECTOR: string = '.switch';
+    public static readonly DEFAULT_INPUTS_SEQUENCE_CONTAINER_DOM_CLASS: string = 'inputs-sequence-container';
+    public static readonly DEFAULT_SWITCH_DOM_CLASS: string = 'switch';
 
 
-    public static readonly DEFAULT_INPUT: Readonly<HTMLInputElement> = NumSeqInputComponent.initializer.defaultInput(); //NumbersSequenceInputComponent.initializeInputDefault(); // initialization is
+    public static readonly DEFAULT_INPUT: Readonly<HTMLInputElement> = InputsSequenceComponent.initializer.defaultInput(); //NumbersSequenceInputComponent.initializeInputDefault(); // initialization is
     public static readonly DEFAULT_MODE = Mode.ADD;
     public static readonly DEFAULT_INIT_INPUTS_NUMBER: number = 4;
 
@@ -41,25 +38,19 @@ export class NumSeqInputComponent {
         Key.Space,
     );
 
-    public static readonly KEYS_TO_CHANGE_INPUT: ReadonlyArray<string> = new Array<Key>(
-        Key.Enter,
-        // Tab is by default
-    );
 
-    private readonly numbersSequenceInputComponentSelector: string = NumSeqInputComponent.DEFAULT_NUMBERS_SEQUENCE_INPUT_COMPONENT_SELECTOR;
-    private readonly numsSeqInputBlockDOMSelector: string = NumSeqInputComponent.DEFAULT_NUM_SEQ_INPUT_BLOCK_DOM_SELECTOR;
-    private readonly addButtonDOMSelector: string = NumSeqInputComponent.DEFAULT_ADD_BUTTON_DOM_SELECTOR;
-    private readonly switchDOMSelector: string = NumSeqInputComponent.DEFAULT_SWITCH_DOM_SELECTOR;
+    private readonly inputsSequenceContainerDOMClass: string = InputsSequenceComponent.DEFAULT_INPUTS_SEQUENCE_CONTAINER_DOM_CLASS;
+    private readonly switchDOMClass: string = InputsSequenceComponent.DEFAULT_SWITCH_DOM_CLASS;
 
-    private input: HTMLInputElement = NumSeqInputComponent.DEFAULT_INPUT;
-    private mode: Mode = NumSeqInputComponent.DEFAULT_MODE;
-    private readonly initInputsNumber = NumSeqInputComponent.DEFAULT_INIT_INPUTS_NUMBER;
+    private input: HTMLInputElement = InputsSequenceComponent.DEFAULT_INPUT;
+    private mode: Mode = InputsSequenceComponent.DEFAULT_MODE;
+    private readonly initInputsNumber = InputsSequenceComponent.DEFAULT_INIT_INPUTS_NUMBER;
 
 
-    private readonly numbersSequenceInputComponent: HTMLDivElement;
-    private readonly addButton: HTMLButtonElement;
-    private readonly numSeqInputBlock: HTMLDivElement;
-    private readonly switch: HTMLElement;
+    private readonly elInputsSequenceContainer: HTMLDivElement;
+    private readonly elAddButton: HTMLButtonElement;
+    private readonly elInputs: HTMLDivElement;
+    private readonly elSwitch: HTMLElement;
 
 
     private inputsList: Array<HTMLInputElement> = new Array<HTMLInputElement>();
@@ -76,24 +67,38 @@ export class NumSeqInputComponent {
 
     constructor(args: {
         input?: HTMLInputElement,
-        numsSeqInputBlockDOMClass?: string,
-        addButtonDOMClass?: string,
-        initInputsNumber?: number }) {
+        initInputsNumber?: number,
+        inputsSequenceContainerSelector?: string,
+        switchSelector?: string
+    }) {
 
-        const { input, numsSeqInputBlockDOMClass, addButtonDOMClass, initInputsNumber } = args;
+        const { input, initInputsNumber, inputsSequenceContainerSelector,  switchSelector } = args;
+
+        if ( inputsSequenceContainerSelector != undefined ) {
+            if ( inputsSequenceContainerSelector.length == 0 ) {
+                throw new Error('Inputs sequenceContainer selector must not be an empty' +
+                    ' string');
+            }
+
+            this.inputsSequenceContainerDOMClass = inputsSequenceContainerSelector;
+        }
+
+        if ( switchSelector != undefined ) {
+            if ( switchSelector.length == 0 ) {
+                throw new Error('Switch selector must not be an empty' +
+                    ' string');
+            }
+
+            this.switchDOMClass = switchSelector;
+        }
 
         let isInputSpecified = false;
 
-        if ( input ) {
+        if ( input != undefined ) {
             this.input = input;
             isInputSpecified = true;
         }
-        if ( numsSeqInputBlockDOMClass && numsSeqInputBlockDOMClass.replaceAll(' ', '') === ' ' ) {
-            this.numsSeqInputBlockDOMSelector = numsSeqInputBlockDOMClass;
-        }
-        if ( addButtonDOMClass && addButtonDOMClass.replaceAll(' ', '') === ' ' ) {
-            this.addButtonDOMSelector = addButtonDOMClass;
-        }
+
         if ( initInputsNumber !== undefined ) {
             if ( initInputsNumber < 0 ) {
                 throw new Error('Initial number of inputs can\'t be below "0"');
@@ -102,15 +107,15 @@ export class NumSeqInputComponent {
         }
 
 
-        this.numbersSequenceInputComponent = document.querySelector( this.numbersSequenceInputComponentSelector ) as HTMLDivElement;
-        this.addButton = document.querySelector( this.numsSeqInputBlockDOMSelector ) as HTMLButtonElement;
-        this.numSeqInputBlock = document.querySelector( this.addButtonDOMSelector ) as HTMLDivElement;
-        this.switch = document.querySelector( this.switchDOMSelector ) as HTMLElement;
+        this.elInputsSequenceContainer = document.querySelector( '.' + this.inputsSequenceContainerDOMClass ) as HTMLDivElement;
+        this.elAddButton = document.querySelector( '.' + this.inputsSequenceContainerDOMClass + '__add-button' ) as HTMLButtonElement;
+        this.elInputs = document.querySelector( '.' + this.inputsSequenceContainerDOMClass + '__inputs' ) as HTMLDivElement;
+        this.elSwitch = document.querySelector( '.' + this.switchDOMClass ) as HTMLElement;
 
-        if (   this.numbersSequenceInputComponent === null
-            || this.addButton === null
-            || this.numSeqInputBlock === null
-            || this.switch === null
+        if (   this.elInputsSequenceContainer === null
+            || this.elAddButton === null
+            || this.elInputs === null
+            || this.elSwitch === null
         ) {
             throw Error( 'HTML document doesn\'t contain elements with the specified' +
                 ' class names.' );
@@ -150,7 +155,7 @@ export class NumSeqInputComponent {
      */
     private init(): void {
 
-        this.numSeqInputBlock.addEventListener( 'keyup', (event: KeyboardEvent) => {
+        this.elInputs.addEventListener( 'keyup', (event: KeyboardEvent) => {
 
             if ( ! (event.target instanceof HTMLInputElement) ) // Is this check
                 // necessary ?
@@ -162,7 +167,7 @@ export class NumSeqInputComponent {
 
             switch ( this.mode ) {
                 case ( Mode.ADD ): {
-                    if ( NumSeqInputComponent.KEYS_TO_ADD_INPUT.includes( pressedKey ) ) {
+                    if ( InputsSequenceComponent.KEYS_TO_ADD_INPUT.includes( pressedKey ) ) {
                         if ( input === this.getLastInput() && this.areAllInputsFilledCorrectly()) {
                                 this.addInput(true);
                         } else {
@@ -176,7 +181,7 @@ export class NumSeqInputComponent {
                 }
                 case ( Mode.DELETE ): {
 
-                    if ( NumSeqInputComponent.KEYS_TO_DELETE_INPUT.includes( pressedKey ) ) {
+                    if ( InputsSequenceComponent.KEYS_TO_DELETE_INPUT.includes( pressedKey ) ) {
                         const prevInput = this.getPrevInput( input );
                         this.deleteInput( event.target );
                         if ( prevInput ) {
@@ -192,7 +197,7 @@ export class NumSeqInputComponent {
         });
 
 
-        this.addButton.addEventListener( 'click', () => {
+        this.elAddButton.addEventListener( 'click', () => {
             switch ( this.mode ) {
                 case (Mode.ADD): {
                     if ( this.areAllInputsFilledCorrectly() ) {
@@ -203,7 +208,7 @@ export class NumSeqInputComponent {
         });
 
 
-        this.switch.addEventListener( 'change', () => {
+        this.elSwitch.addEventListener( 'change', () => {
             console.warn('mr Switch is clicked');
 
             switch ( this.mode ) {
@@ -227,7 +232,7 @@ export class NumSeqInputComponent {
     private findExistingInDOMInputs(): Array<HTMLInputElement> {
         const existingInputs = new Array<HTMLInputElement>();
 
-        for ( const child of this.numSeqInputBlock.children ) {
+        for ( const child of this.elInputs.children ) {
             if ( child instanceof HTMLInputElement ) {
                 existingInputs.push( child );
             }
@@ -249,11 +254,11 @@ export class NumSeqInputComponent {
 
 
     /**
-     * Adds "input" to the end of {@link numSeqInputBlock}.
+     * Adds "input" to the end of {@link elInputs}.
      */
     public addInput(setFocus?: boolean): void {
         const newInput = this.input.cloneNode() as HTMLInputElement;
-        this.numSeqInputBlock.append( newInput );
+        this.elInputs.append( newInput );
         this.inputsList.push( newInput );
 
         if ( setFocus ) {
@@ -262,7 +267,7 @@ export class NumSeqInputComponent {
 
     }
 
-    public addSeveralInputs( numOfInputs: number, setFocus?: boolean ) {
+    public addSeveralInputs( numOfInputs: number, setFocus?: boolean ): void {
         if ( numOfInputs < 0 ) {
             throw new Error('Number of inputs isn\'t allowed to be below "0"');
         }
@@ -293,9 +298,8 @@ export class NumSeqInputComponent {
 
 
     /**
-     * Returns the last "input" element in the {@link numSeqInputBlock} or "underfined"
+     * Returns the last "input" element in the {@link elInputs} or "undefined"
      * if it wasn't found.
-     * @param {HTMLCollection} collection
      * @returns {HTMLInputElement | undefined}
      */
     private getLastInput(): HTMLInputElement | undefined {
@@ -322,9 +326,8 @@ export class NumSeqInputComponent {
 
 
 
-        /**
-     * @deprecated
-     * Deletes all inputs from "numSeqInputBlock".
+    /**
+     * Deletes all inputs from "inputsSequenceContainer".
      * "non-input" elements aren't affected.
      */
     public deleteAllInputs(): void {
@@ -341,9 +344,11 @@ export class NumSeqInputComponent {
         this.mode = mode;
     }
 
+
     private setModeDOM( mode: Mode, prevMode?: Mode ) {
-        this.numbersSequenceInputComponent.classList.remove( prevMode ? prevMode : this.mode );
-        this.numbersSequenceInputComponent.classList.add( mode );
+        console.warn('first mode = ', this.inputsSequenceContainerDOMClass + this.mode);
+        this.elInputsSequenceContainer.classList.remove( prevMode ? this.inputsSequenceContainerDOMClass + prevMode : this.inputsSequenceContainerDOMClass + this.mode );
+        this.elInputsSequenceContainer.classList.add( this.inputsSequenceContainerDOMClass + mode );
     }
 
 
@@ -373,19 +378,9 @@ export class NumSeqInputComponent {
     //
 
 
-    public getAddButtonDOMClass(): string {
-        return this.addButtonDOMSelector;
-    }
 
 
-    public getNumSeqInputBlockDOMClass(): string {
-        return this.numsSeqInputBlockDOMSelector;
-    }
-
-
-
-
-    public getValues(): NumSeqInputComponentResult { // todo
+    public getValues(): InputsSequenceComponentResult {
         const values: Array<any> = new Array<any>();
 
         for ( const input of this.inputsList ) {

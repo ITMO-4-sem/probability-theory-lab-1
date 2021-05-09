@@ -1,5 +1,5 @@
 @use 'variables' as vrs;
-@use '@/components/NumbersSequenceInputComponent/NumbersSequenceInputComponent' with (
+@use '~@/components/InputsSequenceComponent/InputsSequenceComponent.scss' with (
   $font-size: vrs.$font-size-medium,
   $font-size-min: 26px,
   $font-size-max: 80px,
@@ -10,7 +10,9 @@
 );
 
 @use 'src/components/ToggleSwitchComponent/ToggleSwitchComponent' with (
-  $color: vrs.$color-olive-pink
+$color-bg-slider: vrs.$color-olive-yellow,
+$color-bg-slider-checked: vrs.$color-olive-pink,
+$color-bg-thumb: vrs.$color-olive-white,
 );
 
 @import '~normalize.css';
@@ -26,17 +28,25 @@ html {
   box-sizing: border-box;
 }
 
-
 body {
   background-color: vrs.$color-olive-white;
+
+}
+
+
+.container {
   color: vrs.$color-olive-green;
   //font-size: 20px;
-  box-sizing: border-box;
+  margin: 1rem auto;
+  max-width: 80vw;
 }
 
 .container {
-  margin: 0 auto;
-  max-width: 80vw;
+
+}
+
+.switch {
+  margin-top: 0.5em;
 }
 
 
