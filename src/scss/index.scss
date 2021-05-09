@@ -1,5 +1,5 @@
 @use 'variables' as vrs;
-@use '~@/components/InputsSequenceComponent/InputsSequenceComponent.scss' with (
+@use '@/components/InputsSequenceComponent/InputsSequenceComponent.scss' with (
   $font-size: vrs.$font-size-medium,
   $font-size-min: 26px,
   $font-size-max: 80px,
@@ -16,6 +16,11 @@ $color-bg-thumb: vrs.$color-olive-white,
 );
 
 @import '~normalize.css';
+
+.chart-container {
+  height: 400px;
+  width: 400px;
+}
 
 html {
   //font-size: 4vmax;

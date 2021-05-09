@@ -63,6 +63,7 @@ module.exports = {
     extensions: ['.ts', '.js', '.json', '.scss'], // позволяют не писать указанные расширения файлов при импорте
     alias: {
       '@': path.resolve(__dirname, 'src'),
+      '@ts': path.resolve(__dirname, 'src/ts'),
       // alias for ts are placed in tsconfig.json
       '@scss': path.resolve(__dirname, 'src/scss'), // Даже несмотря на 'context' путь через 'path'. Иначе - на работает.
       '@assets': path.resolve(__dirname, 'src/assets'),
