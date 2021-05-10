@@ -5,12 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="favicon.svg">
-    <title>webpack-starter</title>
+    <title>ProbTheor-1</title>
 </head>
 <body>
 
+<header class="header">
+    Выборки и их характеристики
+</header>
 
 <div class="container">
+
+    <p class="heading">Введите выборку в поля ввода или выберите ее из файла</p>
 
 
     <!--  <form action="">-->
@@ -20,41 +25,90 @@
     <!--  </form>-->
     <div class="inputs-sequence-container  inputs-sequence-container--mode-add">
         <div class="inputs-sequence-container__inputs">
+            <input type="number" step="any" maxlength="4" minlength="1" required>
         </div>
         <button class="inputs-sequence-container__add-button"> +</button>
+    </div>
 
-        <label class="switch">
-            <input class="switch__checkbox" type="checkbox" autocomplete="off">
-            <span class="switch__slider switch__slider--round">
-<!--        <img src="./assets/plus-olive-yellow.svg" alt="Plus sign image."/>-->
-                <!--        <img src="src/assets/remove-olive-pink.svg" alt="Delete sign image."/>-->
+    <label class="switch">
+        <input class="switch__checkbox" type="checkbox" autocomplete="off">
+        <span class="switch__slider switch__slider--round">
+            </span>
+    </label>
 
-      </span>
+
+    <hr class="hr">
+
+
+    <div class="file-input">
+        <label class="file-input__label">
+            Choose file
+            <input class="file-input__input" type="file">
         </label>
-    </div>
-<!--    <div class="chart-container">-->
-<!--        <canvas class="distribution-func-plot"></canvas>-->
-<!--    </div>-->
-    <div class="chart-container">
-        <canvas class="interval-distribution-histogram"></canvas>
-    </div>
-    <div class="chart-container">
-        <canvas class="distribution-freq-polygon"></canvas>
+        <span class="file-input__status">No file chosen</span>
     </div>
 
-    <hr>
 
-    <p>sdfsdfsdf</p>
+<!--    <hr class="hr hr&#45;&#45;main">-->
 
-    <p class="heading">Heading</p>
-    <p class="large">Large head</p>
-    <p class="medium">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero
-        reiciendis sequi tempore! A ad alias, aspernatur dolor ea eligendi eos est in iure
-        labore nostrum provident quae quas ut vero?</p>
-    <p class="small">A little more words</p>
+
+    <button class="button button-submit">Посчитать хар-ки</button>
+
+
+    <p class="heading heading-">Характеристики выборки</p>
+
+
+    <div class="sample-characteristics">
+        <p class="sample-characteristics__characteristic">
+            Min:
+            <span class="sample-characteristics__min">123</span>
+        </p>
+        <p class="sample-characteristics__characteristic">
+            Max:
+            <span class="sample-characteristics__max">321</span>
+        </p>
+        <p class="sample-characteristics__characteristic">
+            Размах:
+            <span class="sample-characteristics__scope">321</span>
+        </p>
+        <p class="sample-characteristics__characteristic">
+            Мат ожидание:
+            <span class="sample-characteristics__expectation">321</span>
+        </p>
+        <p class="sample-characteristics__characteristic">
+            СКО:
+            <span class="sample-characteristics__standard-deviation">321</span>
+        </p>
+    </div>
+
+
+<div class="chart-container">
+    <canvas class="distribution-func-plot"></canvas>
+</div>
+<div class="chart-container">
+    <canvas class="interval-distribution-histogram"></canvas>
+</div>
+<div class="chart-container">
+    <canvas class="distribution-freq-polygon"></canvas>
+</div>
+
+<hr>
+
+<p>sdfsdfsdf</p>
+
+<p class="heading">Heading</p>
+<p class="large">Large head</p>
+<p class="medium">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero
+    reiciendis sequi tempore! A ad alias, aspernatur dolor ea eligendi eos est in iure
+    labore nostrum provident quae quas ut vero?</p>
+<p class="small">A little more words</p>
 
 
 </div>
+
+<footer class="footer">
+    Powered by: Maxim Monakhov
+</footer>
 
 
 </body>

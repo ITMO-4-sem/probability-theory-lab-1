@@ -1,12 +1,12 @@
 import { Mode } from './ts/Mode';
-import { Key } from '@/components/InputsSequenceComponent/ts/Key';
-import { InputsSequenceComponentResult } from '@/components/InputsSequenceComponent/ts/InputsSequenceComponentResult';
+import { Key } from '@/components/InputsSequence/ts/Key';
+import { InputsSequenceResult } from '@/components/InputsSequence/ts/InputsSequenceResult';
 
 
 /**
  * NumbersSequenceInputComponent. A component containing
  */
-export class InputsSequenceComponent {
+export class InputsSequence {
 
     // initializers block
     private static readonly initializer = {
@@ -25,7 +25,7 @@ export class InputsSequenceComponent {
     public static readonly DEFAULT_SWITCH_DOM_CLASS: string = 'switch';
 
 
-    public static readonly DEFAULT_INPUT: Readonly<HTMLInputElement> = InputsSequenceComponent.initializer.defaultInput(); //NumbersSequenceInputComponent.initializeInputDefault(); // initialization is
+    public static readonly DEFAULT_INPUT: Readonly<HTMLInputElement> = InputsSequence.initializer.defaultInput(); //NumbersSequenceInputComponent.initializeInputDefault(); // initialization is
     public static readonly DEFAULT_MODE = Mode.ADD;
     public static readonly DEFAULT_INIT_INPUTS_NUMBER: number = 4;
 
@@ -39,30 +39,21 @@ export class InputsSequenceComponent {
     );
 
 
-    private readonly inputsSequenceContainerDOMClass: string = InputsSequenceComponent.DEFAULT_INPUTS_SEQUENCE_CONTAINER_DOM_CLASS;
-    private readonly switchDOMClass: string = InputsSequenceComponent.DEFAULT_SWITCH_DOM_CLASS;
+    private readonly inputsSequenceContainerDOMClass: string = InputsSequence.DEFAULT_INPUTS_SEQUENCE_CONTAINER_DOM_CLASS;
+    private readonly switchDOMClass: string = InputsSequence.DEFAULT_SWITCH_DOM_CLASS;
 
-    private input: HTMLInputElement = InputsSequenceComponent.DEFAULT_INPUT;
-    private mode: Mode = InputsSequenceComponent.DEFAULT_MODE;
-    private readonly initInputsNumber = InputsSequenceComponent.DEFAULT_INIT_INPUTS_NUMBER;
+    private input: HTMLInputElement = InputsSequence.DEFAULT_INPUT;
+    private mode: Mode = InputsSequence.DEFAULT_MODE;
+    private readonly initInputsNumber = InputsSequence.DEFAULT_INIT_INPUTS_NUMBER;
 
 
     private readonly elInputsSequenceContainer: HTMLDivElement;
     private readonly elAddButton: HTMLButtonElement;
     private readonly elInputs: HTMLDivElement;
-    private readonly elSwitch: HTMLElement;
+    // private readonly elSwitch: HTMLElement;
 
 
     private inputsList: Array<HTMLInputElement> = new Array<HTMLInputElement>();
-
-
-
-// onError
-// onWarn
-// setInputProps
-
-
-
 
 
     constructor(args: {
@@ -110,12 +101,12 @@ export class InputsSequenceComponent {
         this.elInputsSequenceContainer = document.querySelector( '.' + this.inputsSequenceContainerDOMClass ) as HTMLDivElement;
         this.elAddButton = document.querySelector( '.' + this.inputsSequenceContainerDOMClass + '__add-button' ) as HTMLButtonElement;
         this.elInputs = document.querySelector( '.' + this.inputsSequenceContainerDOMClass + '__inputs' ) as HTMLDivElement;
-        this.elSwitch = document.querySelector( '.' + this.switchDOMClass ) as HTMLElement;
+        // this.elSwitch = document.querySelector( '.' + this.switchDOMClass ) as HTMLElement;
 
         if (   this.elInputsSequenceContainer === null
             || this.elAddButton === null
             || this.elInputs === null
-            || this.elSwitch === null
+            // || this.elSwitch === null
         ) {
             throw Error( 'HTML document doesn\'t contain elements with the specified' +
                 ' class names.' );
@@ -139,7 +130,7 @@ export class InputsSequenceComponent {
         }
 
         if ( this.initInputsNumber > existingInDOMInputs.length ) {
-            this.addSeveralInputs(this.initInputsNumber - existingInDOMInputs.length, true);
+            this.addInputsToTheEnd(this.initInputsNumber - existingInDOMInputs.length, true);
         }
 
         console.warn('inpList length = ', this.inputsList.length);
@@ -167,7 +158,7 @@ export class InputsSequenceComponent {
 
             switch ( this.mode ) {
                 case ( Mode.ADD ): {
-                    if ( InputsSequenceComponent.KEYS_TO_ADD_INPUT.includes( pressedKey ) ) {
+                    if ( InputsSequence.KEYS_TO_ADD_INPUT.includes( pressedKey ) ) {
                         if ( input === this.getLastInput() && this.areAllInputsFilledCorrectly()) {
                                 this.addInput(true);
                         } else {
@@ -181,7 +172,7 @@ export class InputsSequenceComponent {
                 }
                 case ( Mode.DELETE ): {
 
-                    if ( InputsSequenceComponent.KEYS_TO_DELETE_INPUT.includes( pressedKey ) ) {
+                    if ( InputsSequence.KEYS_TO_DELETE_INPUT.includes( pressedKey ) ) {
                         const prevInput = this.getPrevInput( input );
                         this.deleteInput( event.target );
                         if ( prevInput ) {
@@ -208,25 +199,25 @@ export class InputsSequenceComponent {
         });
 
 
-        this.elSwitch.addEventListener( 'change', () => {
-            console.warn('mr Switch is clicked');
-
-            switch ( this.mode ) {
-                case ( Mode.ADD ): {
-                    this.setMode( Mode.DELETE );
-                    break;
-                }
-                case ( Mode.DELETE ): {
-                    this.setMode( Mode.ADD );
-                    break;
-                }
-                default: {
-                    throw Error('Undefined "mode" is used');
-                }
-            }
-
-            console.warn('new Mode = ', this.mode);
-        });
+        // this.elSwitch.addEventListener( 'change', () => {
+        //     console.warn('mr Switch is clicked');
+        //
+        //     switch ( this.mode ) {
+        //         case ( Mode.ADD ): {
+        //             this.setMode( Mode.DELETE );
+        //             break;
+        //         }
+        //         case ( Mode.DELETE ): {
+        //             this.setMode( Mode.ADD );
+        //             break;
+        //         }
+        //         default: {
+        //             throw Error('Undefined "mode" is used');
+        //         }
+        //     }
+        //
+        //     console.warn('new Mode = ', this.mode);
+        // });
     }
 
     private findExistingInDOMInputs(): Array<HTMLInputElement> {
@@ -267,7 +258,7 @@ export class InputsSequenceComponent {
 
     }
 
-    public addSeveralInputs( numOfInputs: number, setFocus?: boolean ): void {
+    public addInputsToTheEnd(numOfInputs: number, setFocus?: boolean ): void {
         if ( numOfInputs < 0 ) {
             throw new Error('Number of inputs isn\'t allowed to be below "0"');
         }
@@ -294,6 +285,22 @@ export class InputsSequenceComponent {
 
         input.remove();
         this.inputsList.splice( this.inputsList.indexOf(input), 1);
+    }
+
+
+    private deleteInputsFromTheEnd( numOfInputs: number ): void {
+
+        if ( numOfInputs > this.inputsList.length ) {
+            throw new Error('Number of inputs to delete is more then a number of ' +
+                ' existing inputs.');
+        }
+
+        for ( let i = 0; i < numOfInputs; i++ ) {
+            const poppedInput = this.inputsList.pop();
+            if ( poppedInput ) {
+                poppedInput.remove();
+            }
+        }
     }
 
 
@@ -339,48 +346,33 @@ export class InputsSequenceComponent {
         this.inputsList = new Array<HTMLInputElement>();
     }
 
-    private setMode( mode: Mode ) {
+
+    public setValues(values: Array<any>): void {
+        if ( values.length < this.inputsList.length ) {
+            this.deleteInputsFromTheEnd( this.inputsList.length - values.length );
+        } else if ( values.length > this.inputsList.length ) {
+            this.addInputsToTheEnd(values.length - this.inputsList.length);
+        }
+
+        for ( let i = 0; i < values.length; i++ ) {
+            this.inputsList[i].value = values[i].toString();
+        }
+    }
+
+
+    public setMode( mode: Mode ): void {
         this.setModeDOM( mode );
         this.mode = mode;
     }
 
 
     private setModeDOM( mode: Mode, prevMode?: Mode ) {
-        console.warn('first mode = ', this.inputsSequenceContainerDOMClass + this.mode);
         this.elInputsSequenceContainer.classList.remove( prevMode ? this.inputsSequenceContainerDOMClass + prevMode : this.inputsSequenceContainerDOMClass + this.mode );
         this.elInputsSequenceContainer.classList.add( this.inputsSequenceContainerDOMClass + mode );
     }
 
 
-    // /**
-    //  * @deprecated
-    //  * Deletes all inputs from "numSeqInputBlock" just like
-    //  * {@link deleteAllInputs} method but add a single new one. The only input
-    //  * is not being undeleted but added, so it's cleared.
-    //  */
-    // public deleteAllInputsButOne(): void {
-    //     this.deleteAllInputs();
-    //     this.addInput();
-    // }
-
-    // /**
-    //  * @deprecated
-    //  * @param input
-    //  * @see deleteAllInputs
-    //  * @see deleteAllInputsButOne
-    //  */
-    // public setInput(input: HTMLInputElement): void {
-    //     for ( const child of this.numSeqInputBlock.children ) {
-    //         if ( child instanceof HTMLInputElement )
-    //             throw Error( 'numSeqInputBlock contains inputs. You need to delete them at first.' );
-    //     }
-    //     this.input = input;
-    //
-
-
-
-
-    public getValues(): InputsSequenceComponentResult {
+    public getValues(): InputsSequenceResult {
         const values: Array<any> = new Array<any>();
 
         for ( const input of this.inputsList ) {

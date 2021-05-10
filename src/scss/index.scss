@@ -1,5 +1,5 @@
 @use 'variables' as vrs;
-@use '@/components/InputsSequenceComponent/InputsSequenceComponent.scss' with (
+@use '@/components/InputsSequence/InputsSequence.scss' with (
   $font-size: vrs.$font-size-medium,
   $font-size-min: 26px,
   $font-size-max: 80px,
@@ -9,13 +9,19 @@
   $color-add-input-button-text: vrs.$color-olive-white,
 );
 
-@use 'src/components/ToggleSwitchComponent/ToggleSwitchComponent' with (
+@use '@/components/ToggleSwitch/ToggleSwitch' with (
 $color-bg-slider: vrs.$color-olive-yellow,
 $color-bg-slider-checked: vrs.$color-olive-pink,
 $color-bg-thumb: vrs.$color-olive-white,
 );
 
+@use '@/components/FileInput/FileInput' with (
+  $color-bg: vrs.$color-olive-yellow,
+  $color-text: vrs.$color-olive-white,
+);
+
 @import '~normalize.css';
+
 
 .chart-container {
   height: 400px;
@@ -24,7 +30,7 @@ $color-bg-thumb: vrs.$color-olive-white,
 
 html {
   //font-size: 4vmax;
-  font-size: clamp(42px, 4vmax, 100px);
+  font-size: clamp(28px, 3vmax, 100px);
 
 
 }
@@ -35,14 +41,15 @@ html {
 
 body {
   background-color: vrs.$color-olive-white;
+  color: vrs.$color-olive-green;
+  font-size: vrs.$font-size-medium;
 
 }
 
 
 .container {
-  color: vrs.$color-olive-green;
   //font-size: 20px;
-  margin: 1rem auto;
+  margin: 0 auto;
   max-width: 80vw;
 }
 
@@ -56,6 +63,7 @@ body {
 
 
 .heading {
+  margin-top: 1.5em;
   font-size: vrs.$font-size-heading;
 }
 
@@ -69,4 +77,60 @@ body {
 
 .small {
   font-size: vrs.$font-size-small;
+}
+
+.heading {
+  font-size: vrs.$font-size-large;
+}
+
+
+.header, .footer {
+  font-size: vrs.$font-size-heading;
+  padding: 0.3em;
+  background-color: vrs.$color-olive-yellow;
+  color: vrs.$color-olive-white;
+  text-align: center;
+}
+
+.hr {
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(vrs.$color-olive-yellow, 0.75), rgba(vrs.$color-olive-yellow, 0.45), rgba(vrs.$color-olive-yellow, 0));
+
+  &--main {
+    height: 2px;
+    margin-top: 2em;
+    background-image: linear-gradient(to right, rgba(vrs.$color-olive-green, 0.75), rgba(vrs.$color-olive-green, 0.45), rgba(vrs.$color-olive-green, 0));
+
+  }
+}
+
+.chart-container {
+  display: inline-block;
+}
+
+.button {
+
+  margin-top: 0.5em;
+
+    display: inline-block;
+    border: 0.05em solid vrs.$color-olive-yellow;
+    background-color: vrs.$color-olive-yellow;
+    color: vrs.$color-olive-white;
+    padding: 0.3em;
+    border-radius: 0.3em;
+    cursor: pointer;
+    transition: .6s;
+
+    &:hover {
+      color: vrs.$color-olive-yellow;
+      background-color: vrs.$color-olive-white;
+      transition: .6s;
+
+    }
+  }
+
+.button-submit {
+  margin-bottom: 1.5em;
+  margin-top: 2.5em;
 }

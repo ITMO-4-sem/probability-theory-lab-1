@@ -1,0 +1,34 @@
+$color-bg: #3c9fc1 !default;
+$color-border: #bf30a8 !default;;
+$color-text: #fcfafa !default;;
+
+.file-input {
+  font-size: 20px;
+
+
+  &__label {
+    display: inline-block;
+    border: 0.05em solid $color-bg;
+    background-color: $color-bg;
+    color: $color-text;
+    padding: 0.3em;
+    border-radius: 0.3em;
+    cursor: pointer;
+    transition: .6s;
+
+    &:hover {
+      color: $color-bg;
+      background-color: $color-text;
+      transition: .6s;
+
+    }
+  }
+
+  &__input {
+    display: none;
+  }
+
+  &__status{
+    margin-left: 0.4em;
+  }
+}

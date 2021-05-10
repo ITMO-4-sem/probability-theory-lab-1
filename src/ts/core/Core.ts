@@ -1,3 +1,4 @@
+
 export class Core {
 
     public calculate( sample: Array<number> ): CalculationResult {
@@ -181,22 +182,22 @@ export class Core {
 }
 
 
-interface DistributionIntervalDataset {
+export interface DistributionIntervalDataset {
     interval: Interval,
     value: number
 }
 
-interface Range {
+export interface Range {
     x: Array<number>,
     y: Array<number>
 }
 
-interface Interval {
+export interface Interval {
     start: number,
     end: number
 }
 
-interface CalculationResult {
+export interface CalculationResult {
     variationalSample: Array<number>, // вариационный ряд
     minValue: number,
     maxValue: number,
