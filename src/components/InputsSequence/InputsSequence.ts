@@ -373,7 +373,7 @@ export class InputsSequence {
 
 
     public getValues(): InputsSequenceResult {
-        const values: Array<any> = new Array<any>();
+        const values: Array<string> = new Array<string>();
 
         for ( const input of this.inputsList ) {
             values.push( input.value );

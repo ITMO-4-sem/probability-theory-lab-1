@@ -29,8 +29,7 @@ export class Core {
         for ( const elem of sampleSet ) {
             const numOfOccurrences = this.countOccurrences(sample, elem);
             statisticalDistributionRelativeFreq.x.push( elem );
-            statisticalDistributionRelativeFreq.y.push( numOfOccurrences / sampleSize ); // should
-            // be  '/
+            statisticalDistributionRelativeFreq.y.push( numOfOccurrences / sampleSize );
 
             statisticalDistributionFreq.x.push( elem );
             statisticalDistributionFreq.y.push( numOfOccurrences );
@@ -73,15 +72,15 @@ export class Core {
 
         // console.warn('distributionFunction = ', distributionFunction);
 
-        const h = (maxValue - minValue) / (1 + Math.log2(sampleSize));
 
-        // console.warn(' h = ', h);
+
+        const h = (maxValue - minValue) / (1 + Math.log2(sampleSize));
 
         let xStart = minValue - h / 2;
 
         const intervalDistribution = new Array<DistributionIntervalDataset>();
 
-        for ( let i = 0; i < statisticalDistributionFreq.x.length - 1; i++ ) {
+        while ( xStart < maxValue ) {
             const interval = {
                 start: xStart,
                 end: xStart + h
@@ -90,7 +89,7 @@ export class Core {
             intervalDistribution.push(
                 {
                     interval: interval,
-                    value: this.getNumOfIntervalOccurrencies( interval, statisticalDistributionFreq) / h
+                    value: this.getNumOfIntervalOccurrencies( interval, statisticalDistributionFreq ) / h
                 }
             );
 
@@ -167,6 +166,7 @@ export class Core {
         );
         return distributionFunction;
     }
+
 
     private getNumOfIntervalOccurrencies(interval: Interval, range: Range) {
         let counter = 0;

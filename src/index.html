@@ -27,7 +27,7 @@
         <div class="inputs-sequence-container__inputs">
             <input type="number" step="any" maxlength="4" minlength="1" required>
         </div>
-        <button class="inputs-sequence-container__add-button"> +</button>
+        <button class="inputs-sequence-container__add-button"> + </button>
     </div>
 
     <label class="switch">
@@ -43,7 +43,7 @@
     <div class="file-input">
         <label class="file-input__label">
             Choose file
-            <input class="file-input__input" type="file">
+            <input class="file-input__input" type="file" accept=".txt">
         </label>
         <span class="file-input__status">No file chosen</span>
     </div>
@@ -61,53 +61,43 @@
     <div class="sample-characteristics">
         <p class="sample-characteristics__characteristic">
             Min:
-            <span class="sample-characteristics__min">123</span>
+            <span class="sample-characteristics__min">?</span>
         </p>
         <p class="sample-characteristics__characteristic">
             Max:
-            <span class="sample-characteristics__max">321</span>
+            <span class="sample-characteristics__max">?</span>
         </p>
         <p class="sample-characteristics__characteristic">
             Размах:
-            <span class="sample-characteristics__scope">321</span>
+            <span class="sample-characteristics__scope">?</span>
         </p>
         <p class="sample-characteristics__characteristic">
             Мат ожидание:
-            <span class="sample-characteristics__expectation">321</span>
+            <span class="sample-characteristics__expectation">?</span>
         </p>
         <p class="sample-characteristics__characteristic">
             СКО:
-            <span class="sample-characteristics__standard-deviation">321</span>
+            <span class="sample-characteristics__standard-deviation">?</span>
         </p>
     </div>
 
 
-<div class="chart-container">
-    <canvas class="distribution-func-plot"></canvas>
-</div>
-<div class="chart-container">
-    <canvas class="interval-distribution-histogram"></canvas>
-</div>
-<div class="chart-container">
-    <canvas class="distribution-freq-polygon"></canvas>
-</div>
+    <div class="chart-container">
+        <canvas class="distribution-func-plot"></canvas>
+    </div>
 
-<hr>
+    <div class="chart-container">
+        <canvas class="interval-distribution-histogram"></canvas>
+    </div>
 
-<p>sdfsdfsdf</p>
-
-<p class="heading">Heading</p>
-<p class="large">Large head</p>
-<p class="medium">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero
-    reiciendis sequi tempore! A ad alias, aspernatur dolor ea eligendi eos est in iure
-    labore nostrum provident quae quas ut vero?</p>
-<p class="small">A little more words</p>
-
+    <div class="chart-container">
+        <canvas class="distribution-freq-polygon"></canvas>
+    </div>
 
 </div>
 
 <footer class="footer">
-    Powered by: Maxim Monakhov
+    Лаба сделана Максимом Монаховым
 </footer>
 
 
