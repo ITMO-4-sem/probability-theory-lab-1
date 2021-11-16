@@ -3,7 +3,7 @@
 | Выборки и их характеристики
 
 Увидеть лабу в деле можно на сайте 
-[maximmon.dev](https://probability-theory-lab-1.itmo.maximmon.dev/).
+[maximon.site](https://probability-theory-lab-1.itmo.maximon.site/).
 
 ## Описание лабораторной работы
 По числовой выборе нужно определить:
